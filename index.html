@@ -188,13 +188,92 @@ canvas#shot{display:none}
 .bar{height:9px;border-radius:99px;background:var(--surface2);border:1px solid var(--line);overflow:hidden;flex:1}
 .bar i{display:block;height:100%;background:var(--teal2)}
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;place-items:center;z-index:90;padding:18px}
+/* ---- Live results board: green = correct, red = wrong, readable from the back ---- */
+.liveboard{border:2px solid var(--teal);border-radius:18px;padding:18px;background:var(--surface);margin:16px 0}
+.liveboard-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.liveboard-top h3{font-size:18px}
+.liveboard-tools{display:flex;gap:8px;flex-wrap:wrap}
+.lb-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+@media(max-width:640px){.lb-summary{grid-template-columns:repeat(3,1fr);gap:7px}}
+.lb-count{border-radius:13px;padding:12px 10px;text-align:center;border:2px solid var(--line);background:var(--surface2)}
+.lb-count b{display:block;font-size:clamp(22px,5vw,32px);line-height:1.1}
+.lb-count span{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.lb-count.ok{border-color:#16a34a;background:#dcfce7;color:#14532d}
+.lb-count.bad{border-color:#dc2626;background:#fee2e2;color:#7f1d1d}
+.lb-count.wait{color:var(--muted)}
+@media (prefers-color-scheme: dark){.lb-count.ok{background:#0f2e1a;color:#bbf7d0}.lb-count.bad{background:#3f1212;color:#fecaca}}
+.lb-bar{display:flex;height:16px;border-radius:999px;overflow:hidden;border:1px solid var(--line);margin-top:10px;background:var(--surface2)}
+.lb-bar i{display:block;height:100%}
+.lb-bar .seg-ok{background:#16a34a}.lb-bar .seg-bad{background:#dc2626}.lb-bar .seg-wait{background:transparent}
+.liveboard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;margin-top:14px}
+@media(max-width:640px){.liveboard-grid{grid-template-columns:repeat(3,1fr);gap:8px}}
+.lb-tile{border:2px solid var(--line);border-radius:13px;padding:10px 8px 9px;text-align:center;background:var(--surface2);min-height:118px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative}
+.lb-tile .lb-num{font-size:13px;font-weight:800;color:var(--muted)}
+.lb-tile .lb-name{font-size:13px;font-weight:700;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em}
+.lb-tile .lb-letter{font-size:30px;font-weight:900;line-height:1.05}
+.lb-tile .lb-state{font-size:12px;font-weight:800;letter-spacing:.02em}
+.lb-tile.is-correct{background:#16a34a;border-color:#15803d;color:#fff}
+.lb-tile.is-correct .lb-num{color:#dcfce7}
+.lb-tile.is-wrong{background:#dc2626;border-color:#991b1b;color:#fff}
+.lb-tile.is-wrong .lb-num{color:#fecaca}
+.lb-tile.is-answered{background:#dbeafe;border-color:#2563eb}
+.lb-tile.is-answered .lb-letter{color:#1d4ed8}
+@media (prefers-color-scheme: dark){.lb-tile.is-answered{background:#172554;border-color:#3b82f6}.lb-tile.is-answered .lb-letter{color:#bfdbfe}}
+.lb-tile.is-new{outline:3px solid #f59e0b;outline-offset:2px}
+@media (prefers-reduced-motion: no-preference){
+  .lb-tile.is-new{animation:lbpop .7s ease-out 2}
+  @keyframes lbpop{0%{transform:scale(1.06)}100%{transform:scale(1)}}
+}
+/* ---- Projector view: full-screen, dark, only the question + the board ---- */
+.projector{position:fixed;inset:0;z-index:80;background:#0b1220;color:#f8fafc;display:none;overflow-y:auto;padding:18px 18px 28px}
+.projector.open{display:block}
+.projector-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;max-width:1200px;margin:0 auto}
+.projector-top .pill{background:#1e293b;color:#e2e8f0}
+.proj-timer{font-size:26px;font-weight:900}
+.proj-question{max-width:1200px;margin:16px auto 0;font-size:clamp(20px,3.6vw,32px);font-weight:700;line-height:1.35}
+.proj-question .katex{color:#fff}
+.proj-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;max-width:1200px;margin:14px auto 0}
+@media(max-width:640px){.proj-opts{grid-template-columns:1fr}}
+.proj-opt{border:2px solid #334155;border-radius:12px;padding:11px 13px;font-size:16px;display:flex;gap:10px;background:#111c30}
+.proj-opt .letter{flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;color:#fff;font-weight:900}
+.proj-opt.A .letter{background:#dc2626}.proj-opt.B .letter{background:#2563eb}.proj-opt.C .letter{background:#16a34a}.proj-opt.D .letter{background:#d97706}
+.proj-opt.reveal-correct{border-color:#22c55e;background:#14532d}
+.proj-stats{max-width:1200px;margin:18px auto 0;display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-weight:800;font-size:17px}
+.proj-stats .ok{color:#4ade80}.proj-stats .bad{color:#f87171}.proj-stats .wait{color:#cbd5e1}
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px;max-width:1200px;margin:14px auto 0}
+@media(max-width:640px){.proj-grid{grid-template-columns:repeat(3,1fr);gap:8px}}
+.proj-grid .lb-tile{min-height:128px;background:#111c30;border-color:#334155;color:#f8fafc}
+.proj-grid .lb-tile .lb-num{color:#94a3b8}
+.proj-grid .lb-tile .lb-name{font-size:14px}
+.proj-grid .lb-tile.is-correct{background:#16a34a;border-color:#4ade80}
+.proj-grid .lb-tile.is-correct .lb-num{color:#dcfce7}
+.proj-grid .lb-tile.is-wrong{background:#dc2626;border-color:#f87171}
+.proj-grid .lb-tile.is-wrong .lb-num{color:#fecaca}
+.proj-grid .lb-tile.is-answered{background:#1e3a8a;border-color:#3b82f6}
+.proj-controls{max-width:1200px;margin:20px auto 0;display:flex;gap:8px;flex-wrap:wrap;position:sticky;bottom:12px}
+.proj-controls .btn{box-shadow:0 4px 18px rgba(0,0,0,.4)}
+.proj-empty{max-width:1200px;margin:20px auto 0;font-size:17px;color:#e2e8f0}
+/* ---- Linked presentation: Firebase room ---- */
+.link-status{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.roomcode{font-size:clamp(34px,8vw,52px);font-weight:900;letter-spacing:.18em;text-align:center;background:var(--ink);color:var(--bg);border-radius:14px;padding:14px 10px;margin:12px 0 6px}
+.roomcode small{display:block;font-size:12px;letter-spacing:.06em;font-weight:700;opacity:.8}
+.rolebtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.rolebtn{border:1.5px solid var(--line);background:var(--surface2);border-radius:999px;padding:9px 14px;font-weight:800;font-size:14px}
+.rolebtn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.linkbox{border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
+.code-input{font-size:26px;font-weight:900;letter-spacing:.22em;text-transform:uppercase;text-align:center;max-width:260px}
+.proj-waiting{max-width:1200px;margin:16px auto 0;background:#7c2d12;border:2px solid #fb923c;color:#ffedd5;border-radius:13px;padding:14px 16px;font-size:17px;font-weight:700;display:none}
+.proj-waiting.show{display:block}
+.proj-linkstatus{font-weight:800;font-size:14px;color:#fde68a}
+.projector.presenter .teacher-only{display:none !important}
+.projector.presenter .proj-controls{justify-content:flex-start}
 .lightbox.open{display:grid}
 .lightbox img{max-width:96vw;max-height:88vh;background:#fff;border-radius:10px}
 .lightbox button{position:absolute;top:14px;right:14px}
 .footer-note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
 @media print{
   body{background:#fff}
-  .topbar,.tabs,.no-print,.footer-note{display:none !important}
+  .topbar,.tabs,.no-print,.footer-note,.projector,.liveboard-tools{display:none !important}
   .wrap{max-width:none;padding:0}
   section.panel{display:none !important}
   section.panel#print-area{display:block !important}
@@ -216,6 +295,9 @@ canvas#shot{display:none}
       <span class="chip" id="chipClass">Lớp: chưa có học sinh</span>
       <span class="chip" id="chipBank">Bộ đề: 28 câu</span>
       <span class="chip" id="chipSession">Buổi chấm: chưa bắt đầu</span>
+    </div>
+    <div class="btnrow" style="margin-top:12px">
+      <button class="btn gold small" id="gotoPresentBtn" type="button">Màn hình trình chiếu (máy tính) — nhập mã phòng để xem</button>
     </div>
   </div>
 </header>
@@ -373,6 +455,73 @@ canvas#shot{display:none}
       <p class="hint" id="sessionHint">Chưa bắt đầu. Cần ít nhất 1 học sinh và 1 câu hỏi.</p>
     </div>
 
+    <div class="card" id="linkPanel">
+      <h2>Liên kết trình chiếu — điện thoại quét, máy tính hiện kết quả</h2>
+      <p class="lead">Không cần chiếu màn hình điện thoại. Điện thoại của thầy tạo một <b>mã phòng ngắn</b>, máy tính nối máy chiếu mở cùng đường link app này, chọn “Màn hình trình chiếu” và nhập đúng mã phòng đó là xem được — không cần camera trên máy tính. Mỗi đáp án thầy quét được hoặc chấm tay đều đẩy lên máy tính ngay trong câu đó, dưới dạng bảng xanh – đỏ: đúng màu xanh, sai màu đỏ.</p>
+      <p class="lead"><b>Chưa có cấu hình Firebase thì chưa liên kết được.</b> App không tự giả vờ đã đồng bộ: khi chưa kết nối thật, nút tạo phòng và nút vào xem đều bị khóa và hiện rõ lý do. Lúc đó thầy vẫn dùng cách chiếu màn hình điện thoại (Cast / scrcpy) ở cuối phần này làm dự phòng.</p>
+
+      <h3 style="margin-top:14px">1 · Cấu hình Firebase của thầy (nhập trên từng thiết bị, chỉ nằm trong trang đang mở)</h3>
+      <p class="hint">Dùng Firebase Realtime Database của chính thầy, giống kiểu phòng thi của Rung Chuông Vàng. Lấy cấu hình ở Firebase Console → Project settings → Your apps → Web app, rồi dán nguyên khối cấu hình vào đây. Cấu hình chỉ lưu trong phiên mở trang này, đóng trang là phải nhập lại — thầy nhập cùng một cấu hình trên cả điện thoại và máy tính.</p>
+      <label for="firebaseConfigInput">Dán cấu hình Firebase (dạng JSON hoặc khối firebaseConfig)</label>
+      <textarea id="firebaseConfigInput" style="min-height:84px" placeholder='{"apiKey":"...","authDomain":"....firebaseapp.com","databaseURL":"https://....firebasedatabase.app","projectId":"..."}'></textarea>
+      <div class="btnrow">
+        <button class="btn" id="firebaseConnectBtn" type="button">Kết nối Firebase</button>
+        <button class="btn secondary" id="firebaseCopyBtn" type="button">Chép cấu hình để dán sang thiết bị kia</button>
+        <button class="btn secondary" id="firebaseDisconnectBtn" type="button" disabled>Ngắt kết nối</button>
+      </div>
+      <p class="hint" id="firebaseStatus"><b>Chưa liên kết được:</b> chưa có cấu hình Firebase. Nhập cấu hình ở trên rồi bấm “Kết nối Firebase”.</p>
+      <p class="hint" id="firebaseCopyMsg"></p>
+      <details>
+        <summary>Cách lấy cấu hình và mở Realtime Database — bấm để xem</summary>
+        <div style="font-size:14px;margin-top:10px">
+          <p>1. Vào <b>console.firebase.google.com</b>, tạo dự án (miễn phí), chọn <b>Build → Realtime Database → Create Database</b>.</p>
+          <p>2. Vào <b>Project settings → Your apps → Web app (&lt;/&gt;)</b>, đăng ký một app web, Firebase hiện khối <b>firebaseConfig</b> — chép toàn bộ khối đó và dán vào khung trên. Bắt buộc phải có <b>databaseURL</b>, nếu không app báo thiếu và không kết nối được.</p>
+          <p>3. Ở Realtime Database → <b>Rules</b>, trong giờ học đặt quyền cho nhánh của app này, ví dụ: <b>{"rules":{"quetthe":{".read":true,".write":true}}}</b>. Chỉ dùng quyền mở trong buổi học, sau buổi học thầy khóa lại theo nhu cầu của trường. Nếu Rules chặn ghi, điện thoại sẽ báo “Quyền Firebase bị từ chối” và không đẩy được kết quả — đó là kết nối thật bị chặn, không phải đã đồng bộ.</p>
+        </div>
+      </details>
+
+      <div class="rolebtns" role="group" aria-label="Chọn vai trò của thiết bị này">
+        <button class="rolebtn on" id="roleTeacherBtn" type="button" aria-pressed="true">Tôi là giáo viên quét — điện thoại</button>
+        <button class="rolebtn" id="rolePresenterBtn" type="button" aria-pressed="false">Tôi là màn hình trình chiếu — máy tính</button>
+      </div>
+
+      <div class="linkbox" id="teacherLinkBox">
+        <h3>2 · Điện thoại giáo viên: tạo mã phòng</h3>
+        <p class="hint">Tạo mã phòng trước hoặc trong lúc quét đều được, nhưng phải tạo trước khi máy tính vào xem. Giữ điện thoại mở app trong suốt buổi quét — đóng app là máy tính hiện “đang chờ giáo viên quét”.</p>
+        <div class="btnrow">
+          <button class="btn gold" id="createRoomBtn" type="button" disabled>Tạo mã phòng</button>
+          <button class="btn secondary" id="stopRoomBtn" type="button" disabled>Dừng liên kết trình chiếu</button>
+        </div>
+        <div id="roomCodeBox" style="display:none">
+          <div class="roomcode"><small>MÃ PHÒNG — ĐỌC CHO MÁY TÍNH NHẬP</small><span id="roomCodeText">····</span></div>
+          <p class="hint" style="text-align:center" id="roomCodeHint">Trên máy tính: mở cùng đường link app → bấm “Màn hình trình chiếu (máy tính)” ở đầu trang → nhập mã phòng trên.</p>
+          <p class="hint" id="roomStatus">Đang chờ đẩy kết quả…</p>
+          <p class="hint" id="viewerCount"></p>
+        </div>
+        <p class="hint" id="teacherLinkStatus">Chưa tạo mã phòng. Kết nối Firebase ở bước 1 trước.</p>
+      </div>
+
+      <div class="linkbox" id="presenterLinkBox" style="display:none">
+        <h3>2 · Máy tính trình chiếu: nhập mã phòng</h3>
+        <p class="hint">Máy tính chỉ xem, không cần camera, không quét. Nhập đúng mã phòng điện thoại giáo viên vừa tạo. Nếu mã sai hoặc giáo viên chưa tạo phòng, màn hình sẽ hiện “đang chờ giáo viên quét” chứ không hiện kết quả giả.</p>
+        <label for="roomCodeInput">Mã phòng (4 ký tự, không phân biệt hoa / thường)</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input type="text" id="roomCodeInput" class="code-input" maxlength="4" autocomplete="off" placeholder="····" style="flex:0 1 220px" />
+          <button class="btn" id="joinRoomBtn" type="button" disabled>Vào xem trình chiếu</button>
+          <button class="btn secondary" id="leaveRoomBtn" type="button" disabled>Rời màn hình trình chiếu</button>
+        </div>
+        <p class="hint" id="presenterStatus">Chưa vào phòng nào. Kết nối Firebase ở bước 1 trước, rồi nhập mã phòng.</p>
+      </div>
+
+      <details>
+        <summary>Dự phòng khi chưa có Firebase: chiếu màn hình điện thoại (Cast / scrcpy)</summary>
+        <div style="font-size:14px;margin-top:10px">
+          <p><b>Android + laptop nối HDMI (cách đã dùng trước đây):</b> laptop nối máy chiếu bằng HDMI, bấm Win + P chọn Duplicate. Trên laptop mở app Wireless Display (Settings → System → Projecting to this PC, Available everywhere; nếu chưa có thì cài tính năng Wireless Display). Điện thoại và laptop cùng WiFi, vuốt xuống bấm Smart View / Truyền / Cast, chọn tên laptop.</p>
+          <p><b>Cách có dây ổn định khi WiFi yếu:</b> bật Gỡ lỗi USB trên điện thoại, cắm cáp vào laptop, chạy scrcpy, phóng to cửa sổ điện thoại lên máy chiếu. Cách này chỉ chiếu đúng những gì trên điện thoại, không phải liên kết trình chiếu — khi nào có Firebase thì dùng mã phòng ở trên thay cho cách này.</p>
+        </div>
+      </details>
+    </div>
+
     <div class="liveq" id="liveBox" style="display:none">
       <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
         <span class="pill grey" id="liveCounter">Câu 1 / 28</span>
@@ -395,6 +544,27 @@ canvas#shot{display:none}
         <button class="btn" id="nextQBtn" type="button">Câu tiếp theo</button>
         <button class="btn warn" id="finishBtn" type="button">Kết thúc buổi chấm</button>
       </div>
+    </div>
+
+    <div class="liveboard" id="liveBoard" aria-live="polite">
+      <div class="liveboard-top">
+        <div>
+          <h3>Bảng kết quả trực tiếp — cả lớp nhìn lên là thấy</h3>
+          <p class="lead" style="max-width:640px">Mỗi ô là một học sinh, xếp theo số thẻ cố định. Thầy quét được thẻ nào, ô đó đổi màu ngay: <b style="color:#16a34a">xanh là đúng</b>, <b style="color:#dc2626">đỏ là sai</b>, kèm chữ ĐÚNG / SAI và đáp án em đó chọn. Chưa có thẻ thì ô vẫn xám. Bảng này tự đổi màu theo cả camera, ảnh tĩnh và bảng chấm nhanh.</p>
+        </div>
+        <div class="liveboard-tools">
+          <button class="btn secondary small" id="colorModeBtn" type="button" aria-pressed="true">Tô màu đúng / sai: ngay khi quét</button>
+          <button class="btn small" id="projectorBtn" type="button">Mở màn hình chiếu cả lớp</button>
+        </div>
+      </div>
+      <div class="lb-summary">
+        <div class="lb-count ok"><b id="lbCorrect">0</b><span>Đúng · xanh</span></div>
+        <div class="lb-count bad"><b id="lbWrong">0</b><span>Sai · đỏ</span></div>
+        <div class="lb-count wait"><b id="lbWaiting">0</b><span>Chưa có thẻ</span></div>
+      </div>
+      <div class="lb-bar" aria-hidden="true"><i class="seg-ok" id="lbBarOk" style="width:0%"></i><i class="seg-bad" id="lbBarBad" style="width:0%"></i><i class="seg-wait" id="lbBarWait" style="width:100%"></i></div>
+      <div class="liveboard-grid" id="liveBoardGrid"></div>
+      <p class="hint" id="liveBoardHint">Chưa bắt đầu buổi chấm — các ô đang chờ. Bấm “Bắt đầu buổi chấm” ở trên, rồi quét: ô nào vừa quét sẽ viền vàng nhấp lên để cả lớp thấy.</p>
     </div>
 
     <div class="grid2">
@@ -500,6 +670,26 @@ canvas#shot{display:none}
     </div>
     <div class="cards-grid" id="printGrid"></div>
   </section>
+</div>
+
+<div class="projector" id="projectorOverlay" role="dialog" aria-label="Màn hình chiếu kết quả cả lớp">
+  <div class="projector-top">
+    <span class="pill grey" id="projCounter">Chưa bắt đầu</span>
+    <span class="proj-linkstatus" id="projLinkStatus"></span>
+    <span class="proj-timer" id="projTimer"></span>
+    <button class="btn secondary small" id="projectorCloseBtn" type="button">Thoát màn hình chiếu ✕</button>
+  </div>
+  <div class="proj-waiting" id="projWaiting" role="status"></div>
+  <div class="proj-question" id="projQText"></div>
+  <div class="proj-opts" id="projOpts"></div>
+  <div class="proj-stats" id="projStats"></div>
+  <div class="proj-grid" id="projGrid"></div>
+  <p class="proj-empty" id="projEmpty"></p>
+  <div class="proj-controls">
+    <button class="btn gold teacher-only" id="projRevealBtn" type="button">Chiếu đáp án đúng</button>
+    <button class="btn teacher-only" id="projNextBtn" type="button">Câu tiếp theo</button>
+    <button class="btn secondary" id="projBackBtn" type="button">Quay lại màn hình quét</button>
+  </div>
 </div>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-label="Hình phóng to">
@@ -806,6 +996,7 @@ function renderRoster(){
   if(editingId!=null){ var ri=el("renameInput"); if(ri){ ri.focus(); ri.select(); } }
   if(editingCardId!=null){ var ci=el("cardNumInput"); if(ci){ ci.focus(); ci.select(); } }
   renderCards(); renderQuickBoard(); renderSweepStatus(); updateChips();
+  if(typeof renderLiveBoard==="function") renderLiveBoard();
 }
 function addStudent(name){
   name = (name||"").trim();
@@ -1516,6 +1707,7 @@ el("templateBtn").addEventListener("click", function(){
 function resetSessionState(){
   stopTimer();
   session = null;
+  lastScannedId = null;
   el("liveBox").style.display = "none";
   el("sessionHint").textContent = "Chưa bắt đầu. Cần ít nhất 1 học sinh và 1 câu hỏi.";
   el("scanResult").innerHTML = "";
@@ -1524,6 +1716,8 @@ function resetSessionState(){
   detHistory = {}; posHistory = {}; lastOverlay = []; clearOverlay();
   pendingDets = []; if(typeof renderPending==="function") renderPending();
   renderQuickBoard(); renderSweepStatus(); updateChips();
+  if(typeof renderLiveBoard==="function") renderLiveBoard();
+  if(typeof pushRoomState==="function") pushRoomState();
 }
 function stopTimer(){ if(session && session.timerId){ clearInterval(session.timerId); session.timerId=null; } }
 function currentAnswers(){
@@ -1533,9 +1727,110 @@ function currentAnswers(){
 function recordAnswer(studentId, letter){
   if(!session) return;
   if(!session.answers[session.index]) session.answers[session.index]={};
+  var prev = session.answers[session.index][studentId];
+  if(letter!=null && letter!==prev){ lastScannedId = studentId; }
   if(letter==null) delete session.answers[session.index][studentId];
   else session.answers[session.index][studentId]=letter;
   renderLiveStats(); renderQuickBoard(); renderResults(); renderSweepStatus();
+  if(typeof pushRoomAnswer==="function") pushRoomAnswer(studentId, letter);
+}
+/* ---- Bảng kết quả trực tiếp: xanh = đúng, đỏ = sai ---- */
+var showImmediateColors = true;
+var lastScannedId = null;
+function boardTileState(studentId, picked){
+  if(!picked) return "empty";
+  if(!session) return "empty";
+  if(showImmediateColors || session.revealed){
+    return picked===LETTERS[questions[session.index].correct] ? "correct" : "wrong";
+  }
+  return "answered";
+}
+function boardTileHtml(s, picked, state, isNew){
+  var cls = "lb-tile" + (state==="correct" ? " is-correct" : state==="wrong" ? " is-wrong" : state==="answered" ? " is-answered" : "") + (isNew ? " is-new" : "");
+  var stateText = state==="correct" ? "✓ ĐÚNG" : state==="wrong" ? "✗ SAI" : state==="answered" ? "ĐÃ NHẬN" : "CHƯA CÓ THẺ";
+  return '<div class="'+cls+'"><span class="lb-num">Thẻ '+s.card+'</span>' +
+    '<span class="lb-name">'+esc(s.name)+'</span>' +
+    '<span class="lb-letter">'+(picked||"—")+'</span>' +
+    '<span class="lb-state">'+stateText+'</span></div>';
+}
+function boardCounts(){
+  var correct=0, wrong=0, waiting=0;
+  if(!session) return {correct:0, wrong:0, waiting:students.length, got:0};
+  var ans = currentAnswers();
+  var q = questions[session.index];
+  students.forEach(function(s){
+    var p = ans[s.id];
+    if(!p) waiting++;
+    else if(p===LETTERS[q.correct]) correct++;
+    else wrong++;
+  });
+  return {correct:correct, wrong:wrong, waiting:waiting, got:correct+wrong};
+}
+function renderLiveBoard(){
+  var grid = el("liveBoardGrid");
+  if(!grid) return;
+  var ans = session ? currentAnswers() : {};
+  grid.innerHTML = sortedStudents().map(function(s){
+    return boardTileHtml(s, ans[s.id]||"", boardTileState(s.id, ans[s.id]), s.id===lastScannedId);
+  }).join("") || '<p class="hint">Chưa có học sinh. Thêm ở phần “Lớp học”.</p>';
+  var c = boardCounts();
+  el("lbCorrect").textContent = c.correct;
+  el("lbWrong").textContent = c.wrong;
+  el("lbWaiting").textContent = c.waiting;
+  var total = Math.max(1, students.length);
+  el("lbBarOk").style.width = Math.round(c.correct/total*100) + "%";
+  el("lbBarBad").style.width = Math.round(c.wrong/total*100) + "%";
+  el("lbBarWait").style.width = Math.round(c.waiting/total*100) + "%";
+  el("liveBoardHint").textContent = !session
+    ? "Chưa bắt đầu buổi chấm — các ô đang chờ. Bấm “Bắt đầu buổi chấm” ở trên, rồi quét: ô nào vừa quét sẽ viền vàng để cả lớp thấy."
+    : (c.got >= students.length && students.length
+      ? "Đủ cả lớp rồi: " + c.correct + " đúng (xanh), " + c.wrong + " sai (đỏ). Thầy chiếu đáp án hoặc sang câu tiếp theo."
+      : "Đang chấm câu " + (session.index+1) + ": " + c.correct + " đúng (xanh) · " + c.wrong + " sai (đỏ) · " + c.waiting + " chưa có thẻ. Quét tiếp để các ô còn xám đổi màu.");
+  renderProjector();
+}
+function renderProjector(){
+  var overlay = el("projectorOverlay");
+  if(!overlay || !overlay.classList.contains("open")) return;
+  /* Màn hình trình chiếu liên kết (máy tính) do dữ liệu Firebase điều khiển:
+     không để bảng cục bộ ghi đè lên dữ liệu từ xa. */
+  if(typeof isPresenter!=="undefined" && isPresenter){
+    if(typeof renderRemoteBoard==="function") renderRemoteBoard();
+    return;
+  }
+  overlay.classList.remove("presenter");
+  el("projWaiting").classList.remove("show");
+  el("projLinkStatus").textContent = (typeof roomCode!=="undefined" && roomCode) ? ("Liên kết trình chiếu · Mã phòng: " + roomCode) : "";
+  var q = session ? questions[session.index] : null;
+  el("projCounter").textContent = session ? ("Câu " + (session.index+1) + " / " + questions.length + " · " + activeClassName()) : "Chưa bắt đầu";
+  el("projTimer").textContent = session ? (session.timeLeft + "s") : "";
+  el("projQText").innerHTML = q ? renderMathInText(q.text) : "Chưa bắt đầu buổi chấm. Thầy thoát màn hình này, bấm “Bắt đầu buổi chấm” rồi mở lại màn hình chiếu.";
+  el("projOpts").innerHTML = q ? q.options.map(function(o,oi){
+    var cls = "proj-opt " + LETTERS[oi] + ((showImmediateColors || session.revealed) && oi===q.correct ? " reveal-correct" : "");
+    return '<div class="'+cls+'"><span class="letter">'+LETTERS[oi]+'</span><span>'+renderMathInText(o)+'</span></div>';
+  }).join("") : "";
+  var c = boardCounts();
+  el("projStats").innerHTML = session
+    ? '<span class="ok">✓ Đúng: '+c.correct+'</span><span class="bad">✗ Sai: '+c.wrong+'</span><span class="wait">Chưa có thẻ: '+c.waiting+' / '+students.length+'</span>'
+    : "";
+  var ans = session ? currentAnswers() : {};
+  el("projGrid").innerHTML = sortedStudents().map(function(s){
+    return boardTileHtml(s, ans[s.id]||"", boardTileState(s.id, ans[s.id]), s.id===lastScannedId);
+  }).join("");
+  el("projEmpty").textContent = !students.length ? "Chưa có học sinh trong lớp đang chọn." : "";
+  el("projRevealBtn").textContent = session && session.revealed ? "Đã chiếu đáp án" : "Chiếu đáp án đúng";
+}
+function openProjector(){
+  if(typeof isPresenter!=="undefined" && isPresenter) return;
+  el("projectorOverlay").classList.remove("presenter");
+  renderLiveBoard();
+  el("projectorOverlay").classList.add("open");
+  renderProjector();
+  el("projectorOverlay").scrollTop = 0;
+}
+function closeProjector(){
+  el("projectorOverlay").classList.remove("open");
+  el("projectorOverlay").classList.remove("presenter");
+  if(typeof isPresenter!=="undefined" && isPresenter && typeof stopPresenter==="function") stopPresenter();
 }
 function renderLive(){
   if(!session) return;
@@ -1574,6 +1869,7 @@ function renderLiveStats(){
   el("statCorrect").textContent = correct;
   el("statRate").textContent = got ? Math.round(correct/got*100) + "%" : "—";
   el("statLeft").textContent = Math.max(0, students.length - got);
+  renderLiveBoard();
 }
 function startTimer(){
   stopTimer();
@@ -1589,6 +1885,7 @@ function startTimer(){
     }
     el("liveTimer").textContent = session.timeLeft + "s";
     el("timerFill").style.width = Math.max(0, session.timeLeft/session.totalTime*100) + "%";
+    if(el("projTimer")) el("projTimer").textContent = session.timeLeft + "s";
   }, 1000);
 }
 el("startSessionBtn").addEventListener("click", function(){
@@ -1598,11 +1895,13 @@ el("startSessionBtn").addEventListener("click", function(){
   var total = +el("timePerQ").value||30;
   session = {index:start, answers:{}, attempted:{}, revealed:false, timeLeft:total, totalTime:total, running:false, timerId:null};
   session.attempted[start]=true;
+  lastScannedId = null;
   el("sessionHint").textContent = "Đang chấm từ câu " + (start+1) + ". Học sinh giơ thẻ — thầy quét hoặc bấm bảng chấm nhanh.";
   el("scanResult").innerHTML=""; el("sweepPending").innerHTML=""; el("sweepChips").innerHTML="";
   pendingDets = []; renderPending();
   renderLive(); startTimer(); renderSweepStatus();
   el("liveBox").scrollIntoView({behavior:"smooth", block:"start"});
+  if(typeof pushRoomState==="function") pushRoomState();
 });
 el("resetSessionBtn").addEventListener("click", function(){ resetSessionState(); renderResults(); });
 el("timerBtn").addEventListener("click", function(){
@@ -1617,6 +1916,27 @@ el("revealBtn").addEventListener("click", function(){
   if(!session) return;
   session.revealed = true;
   renderLive();
+  if(typeof pushRoomState==="function") pushRoomState();
+});
+/* Bảng kết quả trực tiếp + màn hình chiếu */
+el("colorModeBtn").addEventListener("click", function(){
+  showImmediateColors = !showImmediateColors;
+  var btn = el("colorModeBtn");
+  btn.setAttribute("aria-pressed", showImmediateColors ? "true" : "false");
+  btn.textContent = showImmediateColors
+    ? "Tô màu đúng / sai: ngay khi quét"
+    : "Tô màu đúng / sai: chỉ sau khi chiếu đáp án";
+  renderLiveBoard();
+  if(session) renderLive();
+  if(typeof pushRoomState==="function") pushRoomState();
+});
+el("projectorBtn").addEventListener("click", openProjector);
+el("projectorCloseBtn").addEventListener("click", closeProjector);
+el("projBackBtn").addEventListener("click", closeProjector);
+el("projRevealBtn").addEventListener("click", function(){ el("revealBtn").click(); renderProjector(); });
+el("projNextBtn").addEventListener("click", function(){ el("nextQBtn").click(); renderProjector(); });
+document.addEventListener("keydown", function(e){
+  if(e.key==="Escape" && el("projectorOverlay").classList.contains("open")) closeProjector();
 });
 el("nextQBtn").addEventListener("click", function(){
   if(!session) return;
@@ -1625,14 +1945,17 @@ el("nextQBtn").addEventListener("click", function(){
   session.attempted[session.index]=true;
   session.revealed=false;
   session.timeLeft=session.totalTime;
+  lastScannedId = null;
   pendingDets = []; renderPending();
   el("scanResult").innerHTML=""; el("sweepPending").innerHTML=""; el("sweepChips").innerHTML="";
   renderLive(); startTimer(); renderSweepStatus();
+  if(typeof pushRoomState==="function") pushRoomState();
 });
 el("finishBtn").addEventListener("click", function(){ finishSession(); });
 function finishSession(){
   if(!session) return;
   stopTimer();
+  if(typeof closeProjector==="function") closeProjector();
   var attempted = Object.keys(session.attempted).length;
   el("sessionHint").textContent = "Đã kết thúc buổi chấm: đã chấm " + attempted + " câu cho " + students.length + " học sinh. Xem xếp hạng ở phần “Kết quả”.";
   stopCamera();
@@ -1784,6 +2107,7 @@ function ensureSession(){
   session.attempted[start]=true;
   el("sessionHint").textContent = "Đang chấm từ câu " + (start+1) + " (tự bắt đầu khi thầy quét được thẻ đầu tiên). Học sinh giơ thẻ — thầy quét cả lớp hoặc bấm bảng chấm nhanh.";
   renderLive(); startTimer(); renderSweepStatus();
+  if(typeof pushRoomState==="function") pushRoomState();
   return true;
 }
 function stopSweep(silent){
@@ -2732,6 +3056,443 @@ el("copySummaryBtn").addEventListener("click", function(){
 renderRoster();
 renderBank();
 renderResults();
+</script>
+<script>
+"use strict";
+/* ================= Liên kết trình chiếu qua Firebase Realtime Database =================
+   Nguyên tắc: không có kết nối Firebase thật thì không bao giờ báo đã đồng bộ.
+   Cấu hình Firebase chỉ nằm trong bộ nhớ của trang đang mở (không lưu trữ
+   lâu dài), thầy nhập cùng một cấu hình trên cả điện thoại và máy tính.
+   Điện thoại đẩy: danh sách lớp + câu hỏi hiện tại + từng đáp án.
+   Máy tính chỉ nghe và vẽ lại bảng xanh – đỏ, không quét, không ghi. */
+var firebaseConfigObj = null;
+var firebaseDb = null;
+var firebaseConnected = false;
+var firebaseSdkPromise = null;
+var roomCode = "";
+var roomRef = null;
+var heartbeatTimer = null;
+var viewersRef = null;
+var roomPushFailed = false;
+var isPresenter = false;
+var presenterRef = null;
+var presenterCode = "";
+var presenterViewerRef = null;
+var remoteData = null;
+var staleTimer = null;
+var viewerId = "v" + Math.random().toString(36).slice(2, 10);
+
+function setFirebaseStatus(text){
+  el("firebaseStatus").textContent = text;
+}
+function updateLinkButtons(){
+  var connected = !!(firebaseDb && firebaseConnected);
+  el("createRoomBtn").disabled = !connected || !!roomCode;
+  el("stopRoomBtn").disabled = !roomCode;
+  el("joinRoomBtn").disabled = !connected || isPresenter;
+  el("leaveRoomBtn").disabled = !isPresenter;
+  el("firebaseDisconnectBtn").disabled = !firebaseDb;
+  if(!firebaseDb){
+    el("teacherLinkStatus").textContent = "Chưa tạo mã phòng. Kết nối Firebase ở bước 1 trước.";
+  } else if(!firebaseConnected){
+    el("teacherLinkStatus").textContent = "Firebase đang mất kết nối — kiểm tra mạng rồi kết nối lại. Chưa đẩy được kết quả lên máy tính.";
+  }
+}
+function loadFirebaseSdk(){
+  if(window.firebase && firebase.database) return Promise.resolve();
+  if(firebaseSdkPromise) return firebaseSdkPromise;
+  function loadOne(src){
+    return new Promise(function(resolve, reject){
+      var s = document.createElement("script");
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = function(){ reject(new Error("Không tải được " + src)); };
+      document.head.appendChild(s);
+    });
+  }
+  firebaseSdkPromise = loadOne("https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js")
+    .then(function(){ return loadOne("https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"); })
+    .then(function(){
+      if(!window.firebase || !firebase.database) throw new Error("Thư viện Firebase tải về nhưng không khởi tạo được.");
+    })
+    .catch(function(err){ firebaseSdkPromise = null; throw err; });
+  return firebaseSdkPromise;
+}
+function parseFirebaseConfig(text){
+  var t = String(text || "").trim();
+  if(!t) throw new Error("Chưa dán cấu hình. Thầy dán khối cấu hình Firebase vào khung trên.");
+  var start = t.indexOf("{"), end = t.lastIndexOf("}");
+  if(start < 0 || end <= start) throw new Error("Không thấy khối {…} trong cấu hình. Dán nguyên khối firebaseConfig hoặc JSON của Firebase.");
+  var inner = t.slice(start, end + 1);
+  var obj = null, lastErr = null;
+  try{ obj = JSON.parse(inner); }
+  catch(e1){
+    lastErr = e1;
+    try{
+      var quoted = inner.replace(/([{,]\s*)([A-Za-z_$][A-Za-z0-9_$]*)\s*:/g, '$1"$2":').replace(/,\s*}/g, "}").replace(/,\s*]/g, "]");
+      obj = JSON.parse(quoted);
+    }catch(e2){ lastErr = e2; }
+  }
+  if(!obj || typeof obj !== "object") throw new Error("Cấu hình không đọc được: " + (lastErr && lastErr.message ? lastErr.message : "định dạng lạ") + ". Dán lại khối cấu hình từ Firebase Console.");
+  if(!obj.apiKey || !obj.projectId) throw new Error("Cấu hình thiếu apiKey hoặc projectId. Dán lại toàn bộ khối cấu hình từ Firebase Console.");
+  if(!obj.databaseURL) throw new Error("Cấu hình thiếu databaseURL — đây là địa chỉ Realtime Database, không có nó thì không liên kết được. Thầy kiểm tra lại khối cấu hình đã chép đủ chưa.");
+  return obj;
+}
+function connectFirebase(){
+  var cfg;
+  try{ cfg = parseFirebaseConfig(el("firebaseConfigInput").value); }
+  catch(err){
+    setFirebaseStatus("Chưa liên kết được: " + err.message);
+    updateLinkButtons();
+    return;
+  }
+  setFirebaseStatus("Đang tải thư viện Firebase và kết nối…");
+  el("firebaseConnectBtn").disabled = true;
+  loadFirebaseSdk().then(function(){
+    var initPromise;
+    if(firebase.apps && firebase.apps.length){
+      var cur = firebase.app().options || {};
+      if(cur.databaseURL === cfg.databaseURL && cur.apiKey === cfg.apiKey){
+        initPromise = Promise.resolve();
+      } else {
+        initPromise = firebase.app().delete().then(function(){ firebase.initializeApp(cfg); });
+      }
+    } else {
+      initPromise = Promise.resolve().then(function(){ firebase.initializeApp(cfg); });
+    }
+    return initPromise;
+  }).then(function(){
+    firebaseConfigObj = cfg;
+    firebaseDb = firebase.database();
+    firebaseDb.ref(".info/connected").on("value", function(snap){
+      firebaseConnected = !!snap.val();
+      if(firebaseDb){
+        setFirebaseStatus(firebaseConnected
+          ? ("Đã kết nối Firebase thật (dự án: " + cfg.projectId + "). Điện thoại và máy tính dùng chung cấu hình này mới thấy nhau.")
+          : "Mất kết nối Firebase — kiểm tra mạng. Chưa đẩy được kết quả lên máy tính, màn hình trình chiếu sẽ hiện “đang chờ giáo viên quét”.");
+      }
+      updateLinkButtons();
+      if(isPresenter) renderRemoteBoard();
+    });
+    setFirebaseStatus("Đã kết nối Firebase thật (dự án: " + cfg.projectId + "). Điện thoại và máy tính dùng chung cấu hình này mới thấy nhau.");
+    updateLinkButtons();
+  }).catch(function(err){
+    firebaseDb = null; firebaseConnected = false; firebaseConfigObj = null;
+    setFirebaseStatus("Chưa liên kết được: không kết nối được Firebase (" + (err && err.message ? err.message : err) + "). Kiểm tra mạng và cấu hình, rồi bấm lại. Cách dự phòng: chiếu màn hình điện thoại (Cast / scrcpy) ở cuối phần này.");
+    updateLinkButtons();
+  }).then(function(){ el("firebaseConnectBtn").disabled = false; });
+}
+function disconnectFirebase(){
+  stopRoom();
+  stopPresenter();
+  try{
+    if(firebaseDb) firebaseDb.goOffline();
+    if(window.firebase && firebase.apps && firebase.apps.length) firebase.app().delete().catch(function(){});
+  }catch(e){}
+  firebaseDb = null; firebaseConnected = false; firebaseConfigObj = null; firebaseSdkPromise = null;
+  setFirebaseStatus("Đã ngắt kết nối — chưa liên kết được: chưa có cấu hình Firebase đang kết nối. Nhập lại cấu hình rồi bấm “Kết nối Firebase”, hoặc dùng cách chiếu màn hình điện thoại làm dự phòng.");
+  updateLinkButtons();
+}
+function buildRoomPayload(){
+  var q = session ? questions[session.index] : null;
+  var roster = sortedStudents().map(function(s){ return {id: s.id, name: s.name, card: s.card}; });
+  var meta = {
+    className: activeClassName() || "",
+    teacherOnline: true,
+    lastBeat: (window.firebase && firebase.database) ? firebase.database.ServerValue.TIMESTAMP : Date.now()
+  };
+  var state;
+  if(!session || !q){
+    state = {active: false, className: activeClassName() || "", total: questions.length, showColors: showImmediateColors};
+  } else {
+    state = {
+      active: true, index: session.index, total: questions.length,
+      className: activeClassName() || "",
+      questionText: q.text, options: q.options, correct: q.correct,
+      revealed: !!session.revealed, showColors: showImmediateColors,
+      explain: q.explain || "",
+      hasFigure: !!(q.figures && q.figures.length)
+    };
+  }
+  return {meta: meta, state: state, roster: roster,
+    answersIndex: session ? session.index : null,
+    answers: session ? currentAnswers() : {}};
+}
+function handlePushError(err){
+  roomPushFailed = true;
+  var msg;
+  if(err && err.code === "PERMISSION_DENIED"){
+    msg = "Quyền Firebase bị từ chối — kiểm tra Rules của Realtime Database (xem hướng dẫn ở bước 1). Kết quả chưa đẩy lên máy tính; kết quả vẫn ở trên điện thoại này.";
+  } else {
+    msg = "Không đẩy được lên Firebase (" + (err && err.message ? err.message : err) + ") — kết quả vẫn ở trên điện thoại này, máy tính chưa nhận được.";
+  }
+  el("teacherLinkStatus").textContent = msg;
+  el("roomStatus").textContent = msg;
+}
+function pushRoomState(){
+  if(!roomRef || !firebaseDb) return;
+  var p = buildRoomPayload();
+  roomPushFailed = false;
+  roomRef.update({meta: p.meta, state: p.state, roster: p.roster}).catch(handlePushError);
+  if(session){
+    roomRef.child("answers/" + p.answersIndex).set(p.answers).catch(handlePushError);
+  }
+  el("roomStatus").textContent = session
+    ? ("Đã đẩy lên máy tính: câu " + (session.index + 1) + "/" + questions.length + " · " + Object.keys(currentAnswers()).length + "/" + students.length + " đáp án · mã phòng " + roomCode + ".")
+    : ("Đã đẩy lên máy tính: chưa bắt đầu buổi chấm — máy tính đang chờ giáo viên quét · mã phòng " + roomCode + ".");
+}
+function pushRoomAnswer(studentId, letter){
+  if(!roomRef || !firebaseDb || !session) return;
+  var ref = roomRef.child("answers/" + session.index + "/" + studentId);
+  var done = letter == null ? ref.remove() : ref.set(letter);
+  if(done && done.catch) done.catch(handlePushError);
+  try{
+    roomRef.child("meta/lastBeat").set(firebase.database.ServerValue.TIMESTAMP);
+  }catch(e){}
+}
+function generateRoomCode(){
+  var chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789", out = "";
+  var buf = null;
+  try{ buf = new Uint32Array(4); window.crypto.getRandomValues(buf); }catch(e){}
+  for(var i = 0; i < 4; i++){
+    var r = buf ? (buf[i] % chars.length) : Math.floor(Math.random() * chars.length);
+    out += chars.charAt(r);
+  }
+  return out;
+}
+function createRoom(){
+  if(!firebaseDb){
+    setFirebaseStatus("Chưa liên kết được: chưa kết nối Firebase. Kết nối ở bước 1 trước.");
+    return;
+  }
+  el("createRoomBtn").disabled = true;
+  el("teacherLinkStatus").textContent = "Đang tạo mã phòng…";
+  function tryCode(attempt){
+    var code = generateRoomCode();
+    var ref = firebaseDb.ref("quetthe/rooms/" + code);
+    ref.child("meta/lastBeat").once("value").then(function(snap){
+      var v = snap.val();
+      if(v && (Date.now() - Number(v) < 10 * 60 * 1000) && attempt < 5){ tryCode(attempt + 1); return; }
+      finalizeRoom(code, ref);
+    }).catch(function(){ finalizeRoom(code, ref); });
+  }
+  function finalizeRoom(code, ref){
+    roomCode = code; roomRef = ref; roomPushFailed = false;
+    var p = buildRoomPayload();
+    ref.update({meta: p.meta, state: p.state, roster: p.roster}).then(function(){
+      if(session) return ref.child("answers/" + p.answersIndex).set(p.answers);
+      return null;
+    }).then(function(){
+      el("roomCodeText").textContent = code;
+      el("roomCodeBox").style.display = "block";
+      el("teacherLinkStatus").textContent = "Đã liên kết thật qua Firebase — mã phòng " + code + ". Máy tính nhập đúng mã này là xem được. Giữ điện thoại mở app trong suốt buổi quét.";
+      el("roomStatus").textContent = session
+        ? ("Đã đẩy lên máy tính: câu " + (session.index + 1) + " · mã phòng " + code + ".")
+        : ("Phòng đã sẵn sàng — máy tính vào xem sẽ thấy “đang chờ giáo viên quét” cho đến khi thầy bắt đầu buổi chấm · mã phòng " + code + ".");
+      el("viewerCount").textContent = "";
+      heartbeatTimer = setInterval(function(){
+        if(!roomRef) return;
+        try{ roomRef.child("meta").update({teacherOnline: true, lastBeat: firebase.database.ServerValue.TIMESTAMP}); }catch(e){}
+      }, 5000);
+      viewersRef = ref.child("viewers");
+      viewersRef.on("value", function(snap){
+        var n = snap.numChildren ? snap.numChildren() : 0;
+        el("viewerCount").textContent = n ? ("Đang có " + n + " màn hình trình chiếu đang xem phòng này.") : "Chưa có màn hình trình chiếu nào đang xem — máy tính nhập mã phòng trên là vào xem.";
+      });
+      updateLinkButtons();
+      pushRoomState();
+    }).catch(function(err){
+      roomCode = ""; roomRef = null;
+      el("roomCodeBox").style.display = "none";
+      handlePushError(err);
+      el("teacherLinkStatus").textContent = el("teacherLinkStatus").textContent + " Mã phòng chưa tạo xong — thầy sửa Rules rồi bấm “Tạo mã phòng” lại.";
+      updateLinkButtons();
+    });
+  }
+  tryCode(0);
+}
+function stopRoom(){
+  if(heartbeatTimer){ clearInterval(heartbeatTimer); heartbeatTimer = null; }
+  if(viewersRef){ try{ viewersRef.off(); }catch(e){} viewersRef = null; }
+  if(roomRef && firebaseDb){
+    try{ roomRef.child("meta").update({teacherOnline: false}); }catch(e){}
+  }
+  roomRef = null; roomCode = "";
+  el("roomCodeBox").style.display = "none";
+  el("viewerCount").textContent = "";
+  el("teacherLinkStatus").textContent = "Đã dừng liên kết trình chiếu. Máy tính đang xem sẽ hiện “đang chờ giáo viên quét”. Muốn chiếu lại, bấm “Tạo mã phòng” để lấy mã mới.";
+  updateLinkButtons();
+}
+/* ---- Máy tính: màn hình trình chiếu chỉ xem ---- */
+function selectLinkRole(role){
+  var teacher = role === "teacher";
+  el("roleTeacherBtn").classList.toggle("on", teacher);
+  el("rolePresenterBtn").classList.toggle("on", !teacher);
+  el("roleTeacherBtn").setAttribute("aria-pressed", teacher ? "true" : "false");
+  el("rolePresenterBtn").setAttribute("aria-pressed", teacher ? "false" : "true");
+  el("teacherLinkBox").style.display = teacher ? "block" : "none";
+  el("presenterLinkBox").style.display = teacher ? "none" : "block";
+}
+function remoteTileState(picked, st){
+  if(!picked) return "empty";
+  if(st.showColors || st.revealed) return picked === LETTERS[st.correct] ? "correct" : "wrong";
+  return "answered";
+}
+function renderRemoteBoard(){
+  if(!isPresenter) return;
+  var overlay = el("projectorOverlay");
+  if(!overlay || !overlay.classList.contains("open")) return;
+  var waiting = el("projWaiting");
+  var st = remoteData && remoteData.state;
+  var rosterRaw = remoteData && remoteData.roster;
+  var roster = Array.isArray(rosterRaw) ? rosterRaw : (rosterRaw ? Object.keys(rosterRaw).sort(function(a, b){ return Number(a) - Number(b); }).map(function(k){ return rosterRaw[k]; }) : []);
+  el("projLinkStatus").textContent = "MÀN HÌNH TRÌNH CHIẾU · Mã phòng " + presenterCode;
+  el("projTimer").textContent = "";
+  if(!firebaseConnected){
+    waiting.textContent = "Mất kết nối Firebase trên máy tính này — kiểm tra mạng rồi vào lại phòng. Kết quả đang hiện (nếu có) là của lần nhận gần nhất, không phải kết quả mới.";
+    waiting.classList.add("show");
+  } else if(!remoteData || !st || !st.active){
+    waiting.textContent = "Đang chờ giáo viên quét — giáo viên chưa bắt đầu buổi quét trong phòng này, hoặc mã phòng chưa đúng. Kiểm tra lại mã phòng trên điện thoại giáo viên; màn hình này sẽ tự hiện kết quả ngay khi giáo viên quét được thẻ đầu tiên.";
+    waiting.classList.add("show");
+    el("projCounter").textContent = "Màn hình trình chiếu · Mã phòng " + presenterCode;
+    el("projQText").textContent = "Đang chờ giáo viên quét…";
+    el("projOpts").innerHTML = "";
+    el("projStats").innerHTML = "";
+    el("projGrid").innerHTML = roster.map(function(s){
+      return boardTileHtml(s, "", "empty", false);
+    }).join("");
+    el("projEmpty").textContent = roster.length ? "" : "Chưa thấy danh sách lớp — giáo viên chưa đẩy danh sách lên phòng này.";
+    el("projRevealBtn").textContent = "Chiếu đáp án đúng";
+    return;
+  }
+  var lastBeat = remoteData.meta && remoteData.meta.lastBeat;
+  var stale = !!(lastBeat && (Date.now() - Number(lastBeat) > 20000));
+  if(stale){
+    waiting.textContent = "Mất kết nối với điện thoại giáo viên — đang hiện kết quả của lần quét gần nhất. Đang chờ giáo viên quét lại; giáo viên kiểm tra điện thoại còn mở app và còn mạng không.";
+    waiting.classList.add("show");
+  } else {
+    waiting.classList.remove("show");
+    waiting.textContent = "";
+  }
+  el("projCounter").textContent = "Câu " + (st.index + 1) + " / " + st.total + " · " + (st.className || "") + " · Mã phòng " + presenterCode;
+  el("projQText").innerHTML = renderMathInText(st.questionText || "");
+  el("projOpts").innerHTML = (st.options || []).map(function(o, oi){
+    var cls = "proj-opt " + LETTERS[oi] + ((st.showColors || st.revealed) && oi === st.correct ? " reveal-correct" : "");
+    return '<div class="' + cls + '"><span class="letter">' + LETTERS[oi] + '</span><span>' + renderMathInText(o) + '</span></div>';
+  }).join("");
+  var answers = (remoteData.answers && remoteData.answers[st.index]) || {};
+  var correct = 0, wrong = 0, waitingN = 0;
+  roster.forEach(function(s){
+    var p = answers[s.id];
+    if(!p) waitingN++;
+    else if(p === LETTERS[st.correct]) correct++;
+    else wrong++;
+  });
+  el("projStats").innerHTML = '<span class="ok">✓ Đúng: ' + correct + '</span><span class="bad">✗ Sai: ' + wrong + '</span><span class="wait">Chưa có đáp án: ' + waitingN + ' / ' + roster.length + '</span>' +
+    (st.revealed ? '<span class="ok">Đáp án đúng: ' + LETTERS[st.correct] + '</span>' : '');
+  el("projGrid").innerHTML = roster.map(function(s){
+    var p = answers[s.id] || "";
+    return boardTileHtml(s, p, remoteTileState(p, st), false);
+  }).join("");
+  el("projEmpty").innerHTML = st.revealed && st.explain
+    ? ("<b>Đáp án đúng: " + LETTERS[st.correct] + ".</b> " + renderMathInText(st.explain))
+    : (st.hasFigure ? "Câu này có hình vẽ — xem hình trên điện thoại của thầy." : "");
+  el("projRevealBtn").textContent = st.revealed ? "Đã chiếu đáp án" : "Chiếu đáp án đúng";
+}
+function startPresenter(){
+  var code = String(el("roomCodeInput").value || "").trim().toUpperCase();
+  if(!/^[A-Z0-9]{4}$/.test(code)){
+    el("presenterStatus").textContent = "Mã phòng chưa đúng: mã gồm 4 ký tự như trên điện thoại giáo viên. Gõ lại cho khớp, không thêm khoảng trắng.";
+    el("roomCodeInput").focus();
+    return;
+  }
+  if(!firebaseDb || !firebaseConnected){
+    el("presenterStatus").textContent = "Chưa liên kết được: máy tính này chưa kết nối Firebase. Kết nối ở bước 1 trước, rồi nhập lại mã phòng.";
+    return;
+  }
+  stopPresenter(true);
+  isPresenter = true; presenterCode = code; remoteData = null;
+  presenterRef = firebaseDb.ref("quetthe/rooms/" + code);
+  presenterRef.on("value", function(snap){
+    remoteData = snap.val();
+    renderRemoteBoard();
+  }, function(err){
+    el("presenterStatus").textContent = "Không đọc được phòng " + code + " (" + (err && err.message ? err.message : err) + ") — kiểm tra Rules của Firebase và mã phòng, rồi thử lại.";
+    renderRemoteBoard();
+  });
+  try{
+    presenterViewerRef = presenterRef.child("viewers/" + viewerId);
+    presenterViewerRef.set(true);
+    presenterViewerRef.onDisconnect().remove();
+  }catch(e){ presenterViewerRef = null; }
+  el("projectorOverlay").classList.add("open");
+  el("projectorOverlay").classList.add("presenter");
+  el("projBackBtn").textContent = "Rời màn hình trình chiếu";
+  el("presenterStatus").textContent = "Đã vào phòng " + code + " — đang chờ dữ liệu từ điện thoại giáo viên. Màn hình này chỉ xem, không cần camera.";
+  renderRemoteBoard();
+  if(staleTimer) clearInterval(staleTimer);
+  staleTimer = setInterval(function(){ if(isPresenter) renderRemoteBoard(); }, 2000);
+  updateLinkButtons();
+}
+function stopPresenter(silent){
+  var was = isPresenter;
+  isPresenter = false;
+  if(presenterRef){ try{ presenterRef.off(); }catch(e){} presenterRef = null; }
+  if(presenterViewerRef){ try{ presenterViewerRef.remove(); presenterViewerRef.onDisconnect().cancel(); }catch(e){} presenterViewerRef = null; }
+  if(staleTimer){ clearInterval(staleTimer); staleTimer = null; }
+  remoteData = null; presenterCode = "";
+  el("projectorOverlay").classList.remove("open");
+  el("projectorOverlay").classList.remove("presenter");
+  el("projWaiting").classList.remove("show");
+  el("projBackBtn").textContent = "Quay lại màn hình quét";
+  if(was && !silent){
+    el("presenterStatus").textContent = "Đã rời màn hình trình chiếu. Muốn xem lại, nhập mã phòng và bấm “Vào xem trình chiếu”.";
+  }
+  updateLinkButtons();
+}
+el("firebaseConnectBtn").addEventListener("click", connectFirebase);
+el("firebaseDisconnectBtn").addEventListener("click", disconnectFirebase);
+el("firebaseCopyBtn").addEventListener("click", function(){
+  var text = el("firebaseConfigInput").value;
+  el("firebaseCopyMsg").textContent = "";
+  if(!text.trim()){ el("firebaseCopyMsg").textContent = "Chưa có cấu hình nào trong khung để chép."; return; }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){
+      el("firebaseCopyMsg").textContent = "Đã chép cấu hình — dán đúng khối này vào khung cấu hình trên thiết bị kia rồi bấm “Kết nối Firebase”.";
+    }).catch(function(){
+      el("firebaseCopyMsg").textContent = "Không chép tự động được — thầy bôi đen toàn bộ khung cấu hình rồi chép thủ công.";
+    });
+  } else {
+    el("firebaseCopyMsg").textContent = "Trình duyệt này không chép tự động được — thầy bôi đen toàn bộ khung cấu hình rồi chép thủ công.";
+  }
+});
+el("firebaseConfigInput").addEventListener("input", function(){
+  if(firebaseDb) setFirebaseStatus("Cấu hình vừa đổi — bấm “Kết nối Firebase” lại để dùng cấu hình mới. Cho đến lúc đó, liên kết cũ vẫn dùng cấu hình trước.");
+});
+el("roleTeacherBtn").addEventListener("click", function(){ selectLinkRole("teacher"); });
+el("rolePresenterBtn").addEventListener("click", function(){ selectLinkRole("presenter"); });
+el("createRoomBtn").addEventListener("click", createRoom);
+el("stopRoomBtn").addEventListener("click", stopRoom);
+el("joinRoomBtn").addEventListener("click", startPresenter);
+el("leaveRoomBtn").addEventListener("click", function(){ stopPresenter(false); });
+el("roomCodeInput").addEventListener("input", function(){
+  el("roomCodeInput").value = el("roomCodeInput").value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+});
+el("roomCodeInput").addEventListener("keydown", function(e){
+  if(e.key === "Enter"){ e.preventDefault(); startPresenter(); }
+});
+el("gotoPresentBtn").addEventListener("click", function(){
+  gotoTab("scan");
+  selectLinkRole("presenter");
+  setTimeout(function(){
+    el("linkPanel").scrollIntoView({behavior: "smooth", block: "start"});
+    el("roomCodeInput").focus();
+  }, 120);
+});
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape" && isPresenter) stopPresenter(false);
+});
+updateLinkButtons();
 </script>
 </body>
 </html>
